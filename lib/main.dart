@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_link/core/utils/app_colors.dart';
+import 'package:shop_link/core/utils/app_router.dart';
 
 import 'views/splash/splash_view.dart';
 
@@ -18,7 +19,8 @@ class ShopLink extends StatelessWidget {
         primaryColor: AppColors.primaryColor,
         scaffoldBackgroundColor: const Color(0xffF9F9F9),
       ),
-      home: const SplashView(),
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      initialRoute: SplashView.routeName,
     );
   }
 }

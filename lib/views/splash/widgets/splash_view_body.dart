@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shop_link/core/utils/app_colors.dart';
 import 'package:shop_link/core/widgets/custom_button.dart';
+import 'package:shop_link/views/splash/choose_role.dart';
 
 class SplashViewBody extends StatefulWidget {
   const SplashViewBody({super.key});
@@ -94,7 +95,12 @@ class _SplashViewBodyState extends State<SplashViewBody>
                   ),
                   child: CustomButton(
                     title: 'Let\'s get started',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        ChooseRole.routeName,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 60),
