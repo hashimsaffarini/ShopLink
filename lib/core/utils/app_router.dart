@@ -4,10 +4,15 @@ import 'package:shop_link/views/signin/signin_view.dart';
 import 'package:shop_link/views/signup/signup_view.dart';
 import 'package:shop_link/views/splash/choose_role.dart';
 import 'package:shop_link/views/splash/splash_view.dart';
+import 'package:shop_link/views/store/store_view.dart';
 
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case StoreView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const StoreView(),
+        );
       case SigninView.routeName:
         return MaterialPageRoute(
           builder: (_) => const SigninView(),
