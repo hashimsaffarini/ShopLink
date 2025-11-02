@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:shop_link/views/home/home_view.dart';
+import 'package:shop_link/views/signin/signin_view.dart';
+import 'package:shop_link/views/signup/signup_view.dart';
 import 'package:shop_link/views/splash/choose_role.dart';
 import 'package:shop_link/views/splash/splash_view.dart';
 
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case SigninView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const SigninView(),
+        );
+      case SignupView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const SignupView(),
+        );
+      case HomeView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const HomeView(),
+        );
       case SplashView.routeName:
         return MaterialPageRoute(
           builder: (_) => const SplashView(),

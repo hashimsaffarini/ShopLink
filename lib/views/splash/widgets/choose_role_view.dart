@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shop_link/core/utils/app_colors.dart';
 import 'package:shop_link/core/widgets/custom_button.dart';
+import 'package:shop_link/views/home/home_view.dart';
+import 'package:shop_link/views/signup/signup_view.dart';
 
 class ChooseRoleView extends StatefulWidget {
   const ChooseRoleView({super.key});
@@ -239,8 +241,15 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
         title: 'Continue',
         onPressed: selectedRole != null
             ? () {
-                // TODO: Navigate to next screen based on selected role
-                print('Selected role: $selectedRole');
+                if (selectedRole == 'user') {
+                  Navigator.pushReplacementNamed(context, HomeView.routeName);
+                } else {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    SignupView.routeName,
+                    (route) => false,
+                  );
+                }
               }
             : null,
       ),

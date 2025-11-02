@@ -7,8 +7,11 @@ class ChooseRole extends StatelessWidget {
   static const String routeName = '/choose-role';
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: ChooseRoleView(),
+    return const PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: ChooseRoleView(),
+      ),
     );
   }
 }
