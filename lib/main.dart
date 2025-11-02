@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shop_link/controllers/theme_provider.dart';
 import 'package:shop_link/core/utils/app_router.dart';
-import 'package:shop_link/views/store/store_main.dart';
+import 'package:shop_link/views/store_dashboard/store_dashboard_view.dart';
 
 void main() {
   runApp(
@@ -28,7 +28,7 @@ class ShopLink extends ConsumerWidget {
         scaffoldBackgroundColor: const Color(0xffF9F9F9),
       ),
       onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: StoreMain.routeName,
+      initialRoute: StoreDashboardView.routeName,
     );
   }
 }

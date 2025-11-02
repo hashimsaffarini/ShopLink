@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_link/views/add_product/add_product_view.dart';
 import 'package:shop_link/views/home/home_view.dart';
 import 'package:shop_link/views/signin/signin_view.dart';
 import 'package:shop_link/views/signup/signup_view.dart';
@@ -6,10 +7,19 @@ import 'package:shop_link/views/splash/choose_role.dart';
 import 'package:shop_link/views/splash/splash_view.dart';
 import 'package:shop_link/views/store/store_main.dart';
 import 'package:shop_link/views/store/store_settings.dart';
+import 'package:shop_link/views/store_dashboard/store_dashboard_view.dart';
 
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case StoreDashboardView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const StoreDashboardView(),
+        );
+      case AddProductView.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const AddProductView(),
+        );
       case StoreMain.routeName:
         return MaterialPageRoute(
           builder: (_) => const StoreMain(),

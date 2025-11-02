@@ -14,6 +14,7 @@ class DynamicCustomTextField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.focusColor,
+    this.maxLines = 1,
   });
 
   final String hintText;
@@ -25,6 +26,7 @@ class DynamicCustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final Color? focusColor;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class DynamicCustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       validator: validator,
       onChanged: onChanged,
+      maxLines: maxLines,
       style: GoogleFonts.poppins(
         fontSize: 16,
         fontWeight: FontWeight.w400,
