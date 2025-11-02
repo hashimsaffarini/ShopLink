@@ -147,15 +147,15 @@ class ProductCard extends StatelessWidget {
       ),
       child: Row(
         children: [
+          const SizedBox(width: 8),
           // Product Image
           Container(
             width: 100,
             height: 100,
             decoration: BoxDecoration(
               color: Colors.grey.shade100,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(14),
-                bottomLeft: Radius.circular(14),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(14),
               ),
             ),
             child: product.imagePath != null
