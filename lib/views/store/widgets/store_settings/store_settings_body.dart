@@ -1,38 +1,48 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shop_link/controllers/theme_provider.dart';
 import 'package:shop_link/core/utils/app_colors.dart';
 import 'package:shop_link/core/widgets/dynamic_custom_text_field.dart';
-import 'package:shop_link/views/store/widgets/location_section.dart';
-import 'package:shop_link/views/store/widgets/store_description_field.dart';
-import 'package:shop_link/views/store/widgets/store_header_section.dart';
-import 'package:shop_link/views/store/widgets/store_image_section.dart';
-import 'package:shop_link/views/store/widgets/theme_color_section.dart';
+import 'package:shop_link/views/store/store_main.dart';
+import 'package:shop_link/views/store/widgets/store_settings/location_section.dart';
+import 'package:shop_link/views/store/widgets/store_settings/social_links_section.dart';
+import 'package:shop_link/views/store/widgets/store_settings/store_description_field.dart';
+import 'package:shop_link/views/store/widgets/store_settings/store_header_section.dart';
+import 'package:shop_link/views/store/widgets/store_settings/store_image_section.dart';
+import 'package:shop_link/views/store/widgets/store_settings/store_type_section.dart';
+import 'package:shop_link/views/store/widgets/store_settings/theme_color_section.dart';
 
-class StoreViewBody extends StatefulWidget {
-  const StoreViewBody({super.key});
+class StoreSettingsBody extends StatefulWidget {
+  const StoreSettingsBody({super.key});
 
   @override
-  State<StoreViewBody> createState() => _StoreViewBodyState();
+  State<StoreSettingsBody> createState() => _StoreSettingsBodyState();
 }
 
-class _StoreViewBodyState extends State<StoreViewBody> {
+class _StoreSettingsBodyState extends State<StoreSettingsBody> {
   final _formKey = GlobalKey<FormState>();
   final _storeNameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _whatsappController = TextEditingController();
+  final _instagramController = TextEditingController();
+  final _facebookController = TextEditingController();
+  final _tiktokController = TextEditingController();
 
   Color _selectedThemeColor = AppColors.primaryColor;
   String? _selectedCity;
   String? _storeImagePath;
+  String? _selectedStoreType;
 
   @override
   void dispose() {
     _storeNameController.dispose();
     _descriptionController.dispose();
     _phoneController.dispose();
+    _whatsappController.dispose();
+    _instagramController.dispose();
+    _facebookController.dispose();
+    _tiktokController.dispose();
     super.dispose();
   }
 
@@ -67,17 +77,21 @@ class _StoreViewBodyState extends State<StoreViewBody> {
                 selectedThemeColor: _selectedThemeColor,
               ),
               const SizedBox(height: 32),
-              Consumer(
-                builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  return ThemeColorSection(
-                    selectedThemeColor: _selectedThemeColor,
-                    onColorSelected: (color) {
-                      ref.read(themeProvider.notifier).state = color;
-                      setState(() {
-                        _selectedThemeColor = color;
-                      });
-                    },
-                  );
+              StoreTypeSection(
+                selectedStoreType: _selectedStoreType,
+                onTypeSelected: (type) {
+                  setState(() {
+                    _selectedStoreType = type;
+                  });
+                },
+              ),
+              const SizedBox(height: 32),
+              ThemeColorSection(
+                selectedThemeColor: _selectedThemeColor,
+                onColorSelected: (color) {
+                  setState(() {
+                    _selectedThemeColor = color;
+                  });
                 },
               ),
               const SizedBox(height: 32),
@@ -91,6 +105,14 @@ class _StoreViewBodyState extends State<StoreViewBody> {
               ),
               const SizedBox(height: 20),
               _buildPhoneField(),
+              const SizedBox(height: 32),
+              SocialLinksSection(
+                whatsappController: _whatsappController,
+                instagramController: _instagramController,
+                facebookController: _facebookController,
+                tiktokController: _tiktokController,
+                selectedThemeColor: _selectedThemeColor,
+              ),
               const SizedBox(height: 40),
               _buildPreviewButton(),
               const SizedBox(height: 16),
@@ -228,7 +250,7 @@ class _StoreViewBodyState extends State<StoreViewBody> {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            _saveStoreSettings();
+            _saveStoreSettings(context);
           }
         },
         style: ElevatedButton.styleFrom(
@@ -351,6 +373,42 @@ class _StoreViewBodyState extends State<StoreViewBody> {
                       ),
                     ),
                     const SizedBox(height: 24),
+                    // Store Type Badge
+                    if (_selectedStoreType != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _selectedThemeColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: _selectedThemeColor.withOpacity(0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              _getStoreTypeIcon(_selectedStoreType!),
+                              size: 18,
+                              color: _selectedThemeColor,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              _selectedStoreType!,
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: _selectedThemeColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (_selectedStoreType != null) const SizedBox(height: 16),
                     // Store Description
                     Container(
                       width: double.infinity,
@@ -432,6 +490,68 @@ class _StoreViewBodyState extends State<StoreViewBody> {
                         ],
                       ),
                     ),
+                    // Social Media Quick Actions
+                    if (_whatsappController.text.isNotEmpty ||
+                        _instagramController.text.isNotEmpty ||
+                        _facebookController.text.isNotEmpty ||
+                        _tiktokController.text.isNotEmpty)
+                      const SizedBox(height: 16),
+                    if (_whatsappController.text.isNotEmpty ||
+                        _instagramController.text.isNotEmpty ||
+                        _facebookController.text.isNotEmpty ||
+                        _tiktokController.text.isNotEmpty)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Connect With Us',
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.blackColor,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 12,
+                              runSpacing: 12,
+                              children: [
+                                if (_whatsappController.text.isNotEmpty)
+                                  _buildSocialButton(
+                                    icon: Icons.phone_rounded,
+                                    label: 'WhatsApp',
+                                    color: const Color(0xff25D366),
+                                  ),
+                                if (_instagramController.text.isNotEmpty)
+                                  _buildSocialButton(
+                                    icon: Icons.camera_alt_rounded,
+                                    label: 'Instagram',
+                                    color: const Color(0xffE4405F),
+                                  ),
+                                if (_facebookController.text.isNotEmpty)
+                                  _buildSocialButton(
+                                    icon: Icons.facebook_rounded,
+                                    label: 'Facebook',
+                                    color: const Color(0xff1877F2),
+                                  ),
+                                if (_tiktokController.text.isNotEmpty)
+                                  _buildSocialButton(
+                                    icon: Icons.music_note_rounded,
+                                    label: 'TikTok',
+                                    color: Colors.black,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -463,26 +583,75 @@ class _StoreViewBodyState extends State<StoreViewBody> {
     );
   }
 
-  void _saveStoreSettings() {
-    // TODO: Implement save logic
-    print('Store Name: ${_storeNameController.text}');
-    print('Description: ${_descriptionController.text}');
-    print('Theme Color: $_selectedThemeColor');
-    print('City: $_selectedCity');
-    print('Phone: ${_phoneController.text}');
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Store saved successfully!',
-          style: GoogleFonts.poppins(),
-        ),
-        backgroundColor: _selectedThemeColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+  Widget _buildSocialButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withOpacity(0.3),
+          width: 1.5,
         ),
       ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: color,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  IconData _getStoreTypeIcon(String type) {
+    switch (type) {
+      case 'Clothing':
+        return Icons.checkroom_rounded;
+      case 'Shoes':
+        return Icons.shopping_bag_rounded;
+      case 'Accessories':
+        return Icons.watch_rounded;
+      case 'Electronics':
+        return Icons.devices_rounded;
+      case 'Beauty Products':
+        return Icons.face_rounded;
+      case 'Home & Garden':
+        return Icons.home_rounded;
+      case 'Sports':
+        return Icons.sports_soccer_rounded;
+      case 'Books':
+        return Icons.menu_book_rounded;
+      case 'Toys':
+        return Icons.toys_rounded;
+      case 'Food & Beverages':
+        return Icons.restaurant_rounded;
+      case 'Jewelry':
+        return Icons.diamond_rounded;
+      case 'Other':
+        return Icons.store_rounded;
+      default:
+        return Icons.store_rounded;
+    }
+  }
+
+  void _saveStoreSettings(BuildContext context) {
+    Navigator.pushNamed(context, StoreMain.routeName);
   }
 }

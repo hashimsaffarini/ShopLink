@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shop_link/core/utils/app_colors.dart';
-import 'widgets/store_view_body.dart';
+import 'widgets/store_settings/store_settings_body.dart';
 
-class StoreView extends StatelessWidget {
-  const StoreView({super.key});
-  static const String routeName = '/store';
+class StoreSettings extends StatelessWidget {
+  const StoreSettings({super.key});
+  static const String routeName = '/store_settings';
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class StoreView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: const StoreViewBody(),
+      body: const StoreSettingsBody(),
     );
   }
 }
